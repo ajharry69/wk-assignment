@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/dest_add_person">
+
+    <fragment
+        android:id="@+id/dest_add_person"
+        android:name="com.xently.persona.ui.add.AddPersonFragment"
+        android:label="Add Person"
+        tools:layout="@layout/add_person_fragment">
+        <action
+            android:id="@+id/people_list"
+            app:destination="@id/dest_people_list" />
+    </fragment>
+    <fragment
+        android:id="@+id/dest_people_list"
+        android:name="com.xently.persona.ui.list.PeopleListFragment"
+        android:label="@string/people"
+        tools:layout="@layout/people_list_fragment" />
+</navigation>
