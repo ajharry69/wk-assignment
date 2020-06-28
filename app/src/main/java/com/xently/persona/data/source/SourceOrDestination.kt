@@ -1,6 +1,6 @@
 package com.xently.persona.data.source
 
-enum class Source {
+enum class SourceOrDestination {
     REMOTE,
     LOCAL
 }

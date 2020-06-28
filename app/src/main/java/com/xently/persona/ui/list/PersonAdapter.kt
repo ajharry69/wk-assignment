@@ -6,8 +6,10 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.xently.persona.data.model.Person
 import com.xently.persona.databinding.PersonBinding
+import javax.inject.Inject
 
-class PersonAdapter : ListAdapter<Person, PersonAdapter.PersonViewHolder>(PersonDiffCallback()) {
+class PersonAdapter @Inject constructor() :
+    ListAdapter<Person, PersonAdapter.PersonViewHolder>(PersonDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PersonViewHolder {
         val inflater = LayoutInflater.from(parent.context)

@@ -1,8 +1,8 @@
 package com.xently.persona.di
 
-import com.xently.persona.BuildConfig
 import com.xently.persona.data.source.remote.services.PersonService
 import com.xently.persona.utils.JSON_CONVERTER
+import com.xently.persona.utils.isReleaseBuild
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,7 +25,7 @@ object NetworkModule {
     fun provideRetrofit(): Retrofit {
         val loggingInterceptor = HttpLoggingInterceptor()
             .apply {
-                level = (if (BuildConfig.DEBUG) {
+                level = (if (!isReleaseBuild()) {
                     HttpLoggingInterceptor.Level.BODY
                 } else HttpLoggingInterceptor.Level.NONE)
                 redactHeader("Authorization")  // Prevents header content logging

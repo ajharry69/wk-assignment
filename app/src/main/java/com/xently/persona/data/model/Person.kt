@@ -7,13 +7,15 @@ import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.xently.persona.R
+import com.xently.persona.utils.JSON_CONVERTER
 
 @Entity(tableName = "people")
 data class Person(
-    @PrimaryKey(autoGenerate = false) val id: Int,
+    @PrimaryKey(autoGenerate = false) val id: Int = 1,
     val name: String,
     val gender: Gender,
-    @Embedded(prefix = "location_") val location: Location
+    val imageUrl: String? = null,
+    @Embedded(prefix = "location_") val location: Location = Location()
 ) : Parcelable {
     enum class Gender(@StringRes val nameRes: Int) {
         FEMALE(R.string.female),
@@ -24,13 +26,17 @@ data class Person(
         parcel.readInt(),
         parcel.readString()!!,
         Gender.valueOf(parcel.readString()!!),
+        parcel.readString(),
         parcel.readParcelable(Location::class.java.classLoader) ?: Location()
     )
+
+    override fun toString(): String = JSON_CONVERTER.toJson(this)
 
     override fun hashCode(): Int {
         var result = id
         result = 31 * result + name.hashCode()
         result = 31 * result + gender.hashCode()
+        result = 31 * result + imageUrl.hashCode()
         result = 31 * result + location.hashCode()
         return result
     }
@@ -44,6 +50,7 @@ data class Person(
         if (id != other.id) return false
         if (name != other.name) return false
         if (gender != other.gender) return false
+        if (imageUrl != other.imageUrl) return false
         if (location != other.location) return false
 
         return true
@@ -54,6 +61,7 @@ data class Person(
             writeInt(id)
             writeString(name)
             writeString(gender.name)
+            writeString(imageUrl)
             writeParcelable(location, flags)
         }
     }

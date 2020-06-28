@@ -1,7 +1,16 @@
 <resources>
     <string name="app_name">Persona</string>
     <string name="people">People</string>
-    <string name="male">Male</string>
-    <string name="female">Female</string>
+    <string name="male">MALE</string>
+    <string name="female">FEMALE</string>
     <string name="content_desc_profile_photo">profile photo</string>
+    <string name="name">Name</string>
+    <string name="take_photo">Take Photo</string>
+    <string name="save_local">Save Local</string>
+    <string name="upload">Upload</string>
+    <string name="list">List</string>
+    <string name="error_gender_required">Gender required</string>
+    <string name="error_field_required">Required</string>
+    <string name="person_added_successfully">%1$s added successfully</string>
+    <string name="capture_location">Capture Location</string>
 </resources>
