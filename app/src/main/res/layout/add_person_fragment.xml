@@ -29,6 +29,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
                 android:theme="@style/ThemeOverlay.Persona.AppBar.Toolbar"
+                app:menu="@menu/add_person"
                 app:popupTheme="@style/ThemeOverlay.Persona.Popup.Toolbar">
 
                 <TextView
@@ -124,8 +125,9 @@
                     app:layout_constraintEnd_toEndOf="@id/gender"
                     app:layout_constraintTop_toTopOf="@id/photo" />
 
-                <com.google.android.gms.maps.MapView
+                <androidx.fragment.app.FragmentContainerView
                     android:id="@+id/map"
+                    android:name="com.google.android.gms.maps.SupportMapFragment"
                     android:layout_width="0dp"
                     android:layout_height="200dp"
                     android:layout_marginTop="8dp"

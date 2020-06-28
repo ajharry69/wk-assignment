@@ -1,3 +1,3 @@
 package com.xently.persona.data.model
 
-data class ServerError(val message: String?, val code: String? = null)
+data class ServerError(val message: String?, val code: String? = null, val metadata: Any? = null)

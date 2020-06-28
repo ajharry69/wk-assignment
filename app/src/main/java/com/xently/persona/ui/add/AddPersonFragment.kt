@@ -8,6 +8,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.view.LayoutInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.FileProvider
@@ -15,6 +16,12 @@ import androidx.core.net.toFile
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.Navigation
+import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.SupportMapFragment
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.xently.persona.BuildConfig
 import com.xently.persona.R
@@ -35,7 +42,7 @@ import java.io.File
 import java.io.IOException
 
 @AndroidEntryPoint
-class AddPersonFragment : Fragment() {
+class AddPersonFragment : Fragment(), OnMapReadyCallback {
 
     private var location: Location? = null
     private var photoFile: File? = null
@@ -66,6 +73,9 @@ class AddPersonFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        (childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment)?.apply {
+            getMapAsync(this@AddPersonFragment)
+        }
         activateClickListeners()
     }
 
@@ -103,6 +113,24 @@ class AddPersonFragment : Fragment() {
     override fun onDestroyView() {
         _binding = null
         super.onDestroyView()
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
+            R.id.menu_item_map_view -> {
+                // TODO: Change map view
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    override fun onMapReady(p0: GoogleMap?) {
+        p0?.run {
+            val sydney = LatLng(-34.0, 151.0)
+            addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
+            moveCamera(CameraUpdateFactory.newLatLng(sydney))
+        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

@@ -4,23 +4,23 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Location(
-    val latitude: Float = 0f,
-    val longitude: Float = 0f,
-    val altitude: Float = 0f,
+    val latitude: Double = 0.0,
+    val longitude: Double = 0.0,
+    val altitude: Double = 0.0,
     val name: String? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readFloat(),
-        parcel.readFloat(),
-        parcel.readFloat(),
+        parcel.readDouble(),
+        parcel.readDouble(),
+        parcel.readDouble(),
         parcel.readString()
     )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.run {
-            writeFloat(latitude)
-            writeFloat(longitude)
-            writeFloat(altitude)
+            writeDouble(latitude)
+            writeDouble(longitude)
+            writeDouble(altitude)
             writeString(name)
         }
     }
