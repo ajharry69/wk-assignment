@@ -3,8 +3,22 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/menu_item_map_view"
-        android:icon="@drawable/ic_street_view"
+        android:id="@+id/menu_item_map_normal_view"
         android:title="@string/normal_map_view"
-        app:showAsAction="ifRoom|withText" />
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_map_satellite_view"
+        android:title="@string/satellite_map_view"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_map_hybrid_view"
+        android:title="@string/hybrid_map_view"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/menu_item_map_terrain_view"
+        android:title="@string/terrain_map_view"
+        app:showAsAction="never" />
 </menu>

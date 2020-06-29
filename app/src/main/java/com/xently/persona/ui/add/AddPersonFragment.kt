@@ -6,11 +6,15 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.location.Geocoder
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.*
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.FileProvider
 import androidx.core.net.toFile
 import androidx.fragment.app.viewModels
@@ -21,6 +25,7 @@ import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.Marker
 import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.xently.persona.BuildConfig
@@ -31,6 +36,7 @@ import com.xently.persona.data.model.Location
 import com.xently.persona.data.model.Person
 import com.xently.persona.data.source.SourceOrDestination
 import com.xently.persona.databinding.AddPersonFragmentBinding
+import com.xently.persona.utils.Log
 import com.xently.persona.utils.setImageFromPath
 import com.xently.xui.Fragment
 import com.xently.xui.utils.ui.fragment.requestFeaturePermission
@@ -42,11 +48,12 @@ import java.io.File
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 @AndroidEntryPoint
-class AddPersonFragment : Fragment(), OnMapReadyCallback {
+class AddPersonFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDragListener {
 
-    private var location: Location? = null
+    private var location: Location = Location(-1.288457, 36.823103)
     private var photoFile: File? = null
     private var currentPhotoPath: String? = null
     private var map: GoogleMap? = null
@@ -54,6 +61,9 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
     private var _binding: AddPersonFragmentBinding? = null
     private val binding: AddPersonFragmentBinding
         get() = _binding!!
+
+    @Inject
+    lateinit var geocoder: Geocoder
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -71,10 +81,6 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
         (childFragmentManager.findFragmentById(R.id.map) as? SupportMapFragment)?.apply {
             getMapAsync(this@AddPersonFragment)
         }
-        requestFeaturePermission(
-            Manifest.permission.ACCESS_FINE_LOCATION,
-            LOCATION_PERMISSION_REQUEST_CODE,
-            { onLocationPermissionGranted(map) }) { onLocationPermissionRationaleNeeded() }
         activateClickListeners()
     }
 
@@ -89,6 +95,8 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
                         showSnackBar(message)
                         clearText(name)
                         hideViews(progress)
+                        gender.setSelection(0, true)
+                        photo.setImageResource(R.drawable.ic_avator)
                         enableViews(captureLocation, saveLocal, upload, list)
                     }
                 }
@@ -114,49 +122,25 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
         super.onDestroyView()
     }
 
-    override fun onPrepareOptionsMenu(menu: Menu) {
-        super.onPrepareOptionsMenu(menu)
-        menu.findItem(R.id.menu_item_map_view)?.run {
-            map?.also {
-                title = if (it.mapType == GoogleMap.MAP_TYPE_NORMAL) {
-                    setIcon(R.drawable.ic_street_view)
-                    getString(R.string.normal_map_view)
-                } else {
-                    setIcon(R.drawable.ic_satellite_view)
-                    getString(R.string.satellite_map_view)
-                }
-            }
-        }
-    }
-
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.menu_item_map_view -> {
-                map?.run {
-                    if (mapType == GoogleMap.MAP_TYPE_NORMAL) {
-                        mapType = GoogleMap.MAP_TYPE_SATELLITE
-                        item.title = getString(R.string.normal_map_view)
-                        item.setIcon(R.drawable.ic_street_view)
-                    } else {
-                        mapType = GoogleMap.MAP_TYPE_NORMAL
-                        item.title = getString(R.string.satellite_map_view)
-                        item.setIcon(R.drawable.ic_satellite_view)
-                    }
-                }
+            R.id.menu_item_map_normal_view -> {
+                map?.mapType = GoogleMap.MAP_TYPE_NORMAL
+                true
+            }
+            R.id.menu_item_map_satellite_view -> {
+                map?.mapType = GoogleMap.MAP_TYPE_SATELLITE
+                true
+            }
+            R.id.menu_item_map_hybrid_view -> {
+                map?.mapType = GoogleMap.MAP_TYPE_HYBRID
+                true
+            }
+            R.id.menu_item_map_terrain_view -> {
+                map?.mapType = GoogleMap.MAP_TYPE_TERRAIN
                 true
             }
             else -> super.onOptionsItemSelected(item)
-        }
-    }
-
-    override fun onMapReady(p0: GoogleMap?) {
-        map = p0?.apply {
-            val sydney = LatLng(-34.0, 151.0)
-            addMarker(MarkerOptions().position(sydney).title("Marker in Sydney"))
-            moveCamera(CameraUpdateFactory.newLatLng(sydney)) // New latlngzone
-            setOnMapLongClickListener {
-                addMarker(MarkerOptions().position(it))
-            }
         }
     }
 
@@ -197,7 +181,7 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
             }
             LOCATION_PERMISSION_REQUEST_CODE -> {
                 if (isPermissionGranted) {
-                    onLocationPermissionGranted(map)
+                    onLocationPermissionGranted()
                     return
                 }
                 // permission denied! Disable the functionality that depends on this permission.
@@ -207,6 +191,34 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
             else -> super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         }
     }
+
+    override fun onMapReady(p0: GoogleMap?) {
+        map = p0?.apply {
+            val nairobi = LatLng(location.latitude, location.longitude)
+            val address = nairobi.getAddress()
+            location = location.copy(address = address)
+            addMarker(MarkerOptions().position(nairobi).title(address).draggable(true))
+            moveCamera(CameraUpdateFactory.newLatLngZoom(nairobi, 18f))
+            setOnMarkerDragListener(this@AddPersonFragment)
+        }
+    }
+
+    override fun onMarkerDragEnd(p0: Marker?) {
+        p0?.run {
+            val address = position.getAddress()
+            location = location.copy(
+                latitude = position.latitude,
+                longitude = position.longitude,
+                address = address
+            )
+            title = address
+            showInfoWindow()
+        }
+    }
+
+    override fun onMarkerDragStart(p0: Marker?) = Unit
+
+    override fun onMarkerDrag(p0: Marker?) = Unit
 
     private fun activateClickListeners() {
         with(binding) {
@@ -227,8 +239,10 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
                 addPerson()
             }
             captureLocation.setClickListener {
-                // TODO: Implement...
-                showSnackBar("TODO: capture location")
+                requestFeaturePermission(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    LOCATION_PERMISSION_REQUEST_CODE,
+                    { onLocationPermissionGranted() }) { onLocationPermissionRationaleNeeded() }
             }
         }
     }
@@ -251,22 +265,26 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
                 nameContainer.setErrorText(R.string.error_field_required)
                 return@run null
             }
-            Person(name = name, gender = gender, location = getLocationFromMap())
+            Person(name = name, gender = gender, location = location)
         }
     }
 
-    private fun getLocationFromMap(): Location {
-        if (location == null) location = Location()
-        return location!!
+    private fun LatLng.getAddress(): String? {
+        try {
+            val addresses = geocoder.getFromLocation(latitude, longitude, 1)
+            if (addresses.isNotEmpty()) {
+                val address = addresses[0]
+                return address.getAddressLine(0) ?: address.locality
+            }
+        } catch (ex: IOException) {
+            Log.show(LOG_TAG, ex.message, ex, Log.Type.ERROR)
+        }
+        return getString(R.string.default_location)
     }
 
     @SuppressLint("MissingPermission")
-    private fun onLocationPermissionGranted(map: GoogleMap?) {
+    private fun onLocationPermissionGranted() {
         map?.isMyLocationEnabled = true
-    }
-
-    private fun onLocationPermissionRationaleNeeded() {
-
     }
 
     private fun onCameraPermissionGranted() {
@@ -300,6 +318,10 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+    private fun onLocationPermissionRationaleNeeded() {
+
+    }
+
     private fun onCameraPermissionRationaleNeeded() {
 
     }
@@ -308,6 +330,6 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback {
         private const val CAMERA_PERMISSION_REQUEST_CODE = 123
         private const val LOCATION_PERMISSION_REQUEST_CODE = 321
         private const val CAMERA_INTENT_REQUEST_CODE = 1234
-//        private val LOG_TAG = AddPersonFragment::class.java.simpleName
+        private val LOG_TAG = AddPersonFragment::class.java.simpleName
     }
 }

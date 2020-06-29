@@ -20,8 +20,8 @@
 
         <ImageView
             android:id="@+id/photo"
-            android:layout_width="85dp"
-            android:layout_height="85dp"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
             android:layout_marginEnd="8dp"
             android:contentDescription="@string/content_desc_profile_photo"
             app:imageFromUrl="@{person.photoUrl}"
@@ -43,31 +43,29 @@
             app:layout_constraintTop_toTopOf="@id/photo"
             tools:text="Orinda Harrison" />
 
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/location"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_location"
+            android:text="@{person.location.address ?? @string/default_location}"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            app:layout_constraintBottom_toTopOf="@id/gender"
+            app:layout_constraintEnd_toEndOf="@id/name"
+            app:layout_constraintStart_toStartOf="@id/name"
+            app:layout_constraintTop_toBottomOf="@id/name"
+            tools:text="Nairobi" />
+
         <!-- TODO: Replace gender text with resource equivalent -->
         <TextView
             android:id="@+id/gender"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@{person.gender.name()}"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            app:layout_constraintBaseline_toBaselineOf="@id/location"
-            app:layout_constraintEnd_toStartOf="@id/location"
-            app:layout_constraintStart_toStartOf="@id/name"
-            tools:text="[FE]MALE" />
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/location"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:drawableStart="@drawable/ic_location"
-            android:gravity="center_vertical|end"
-            android:text="@{person.location.name ?? @string/default_location}"
-            android:textAlignment="gravity"
-            android:textAppearance="?attr/textAppearanceBody2"
+            android:textAppearance="?attr/textAppearanceSubtitle2"
             app:layout_constraintBottom_toBottomOf="@id/photo"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/gender"
-            app:layout_constraintTop_toBottomOf="@id/name"
-            tools:text="Nairobi" />
+            app:layout_constraintStart_toStartOf="@id/location"
+            app:layout_constraintTop_toBottomOf="@id/location"
+            tools:text="[FE]MALE" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

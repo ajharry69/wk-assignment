@@ -56,7 +56,7 @@
             app:layout_constraintTop_toBottomOf="@id/appbar"
             tools:visibility="visible" />
 
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/scroll_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -65,129 +65,126 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appbar">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/name_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:padding="24dp">
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginBottom="8dp"
+                android:hint="@string/name"
+                app:hintAnimationEnabled="true"
+                app:hintEnabled="true"
+                app:layout_constraintBottom_toTopOf="@id/gender"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/name_container"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="8dp"
-                    android:hint="@string/name"
-                    app:hintAnimationEnabled="true"
-                    app:hintEnabled="true"
-                    app:layout_constraintBottom_toTopOf="@id/gender"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    android:inputType="textPersonName"
+                    android:selectAllOnFocus="true"
+                    android:singleLine="true" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/name"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textPersonName"
-                        android:selectAllOnFocus="true"
-                        android:singleLine="true" />
-                </com.google.android.material.textfield.TextInputLayout>
+            <Spinner
+                android:id="@+id/gender"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:entries="@array/gender"
+                app:layout_constraintBottom_toTopOf="@id/photo"
+                app:layout_constraintEnd_toEndOf="@id/name_container"
+                app:layout_constraintStart_toStartOf="@id/name_container"
+                app:layout_constraintTop_toBottomOf="@id/name_container" />
 
-                <Spinner
-                    android:id="@+id/gender"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:entries="@array/gender"
-                    app:layout_constraintBottom_toTopOf="@id/photo"
-                    app:layout_constraintEnd_toEndOf="@id/name_container"
-                    app:layout_constraintStart_toStartOf="@id/name_container"
-                    app:layout_constraintTop_toBottomOf="@id/name_container" />
+            <ImageView
+                android:id="@+id/photo"
+                android:layout_width="73dp"
+                android:layout_height="50dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@android:color/darker_gray"
+                android:contentDescription="@string/content_desc_profile_photo"
+                android:scaleType="centerCrop"
+                app:layout_constraintBottom_toTopOf="@id/map"
+                app:layout_constraintStart_toStartOf="@id/gender"
+                app:layout_constraintTop_toBottomOf="@id/gender"
+                app:srcCompat="@drawable/ic_avator" />
 
-                <ImageView
-                    android:id="@+id/photo"
-                    android:layout_width="73dp"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:backgroundTint="@android:color/darker_gray"
-                    android:contentDescription="@string/content_desc_profile_photo"
-                    android:scaleType="centerCrop"
-                    app:layout_constraintBottom_toTopOf="@id/map"
-                    app:layout_constraintStart_toStartOf="@id/gender"
-                    app:layout_constraintTop_toBottomOf="@id/gender"
-                    app:srcCompat="@drawable/ic_avator" />
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/take_photo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/take_photo"
+                app:layout_constraintBottom_toBottomOf="@id/photo"
+                app:layout_constraintEnd_toEndOf="@id/gender"
+                app:layout_constraintTop_toTopOf="@id/photo" />
+
+            <androidx.fragment.app.FragmentContainerView
+                android:id="@+id/map"
+                android:name="com.google.android.gms.maps.SupportMapFragment"
+                android:layout_width="0dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                app:layout_constraintBottom_toTopOf="@id/capture_location"
+                app:layout_constraintEnd_toEndOf="@id/take_photo"
+                app:layout_constraintStart_toStartOf="@id/photo"
+                app:layout_constraintTop_toBottomOf="@id/photo"
+                tools:background="@android:color/darker_gray" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/capture_location"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="@string/capture_location"
+                app:layout_constraintBottom_toTopOf="@id/buttons_container"
+                app:layout_constraintStart_toStartOf="@id/map"
+                app:layout_constraintTop_toBottomOf="@id/map" />
+
+            <LinearLayout
+                android:id="@+id/buttons_container"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:weightSum="3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="@id/map"
+                app:layout_constraintStart_toStartOf="@id/capture_location"
+                app:layout_constraintTop_toBottomOf="@id/capture_location">
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/take_photo"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/take_photo"
-                    app:layout_constraintBottom_toBottomOf="@id/photo"
-                    app:layout_constraintEnd_toEndOf="@id/gender"
-                    app:layout_constraintTop_toTopOf="@id/photo" />
-
-                <androidx.fragment.app.FragmentContainerView
-                    android:id="@+id/map"
-                    android:name="com.google.android.gms.maps.SupportMapFragment"
+                    android:id="@+id/save_local"
                     android:layout_width="0dp"
-                    android:layout_height="250dp"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    app:layout_constraintBottom_toTopOf="@id/capture_location"
-                    app:layout_constraintEnd_toEndOf="@id/take_photo"
-                    app:layout_constraintStart_toStartOf="@id/photo"
-                    app:layout_constraintTop_toBottomOf="@id/photo"
-                    tools:background="@android:color/darker_gray" />
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/save_local" />
 
                 <com.google.android.material.button.MaterialButton
-                    android:id="@+id/capture_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="@string/capture_location"
-                    app:layout_constraintBottom_toTopOf="@id/buttons_container"
-                    app:layout_constraintStart_toStartOf="@id/map"
-                    app:layout_constraintTop_toBottomOf="@id/map" />
-
-                <LinearLayout
-                    android:id="@+id/buttons_container"
+                    android:id="@+id/list"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:weightSum="3"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="@id/map"
-                    app:layout_constraintStart_toStartOf="@id/capture_location"
-                    app:layout_constraintTop_toBottomOf="@id/capture_location">
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_weight="1"
+                    android:text="@string/list" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/save_local"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/save_local" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/list"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginEnd="8dp"
-                        android:layout_weight="1"
-                        android:text="@string/list" />
-
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/upload"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:text="@string/upload" />
-                </LinearLayout>
-            </androidx.constraintlayout.widget.ConstraintLayout>
-        </ScrollView>
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/upload"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/upload" />
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

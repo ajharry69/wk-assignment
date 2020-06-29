@@ -7,7 +7,7 @@ data class Location(
     val latitude: Double = 0.0,
     val longitude: Double = 0.0,
     val altitude: Double = 0.0,
-    val name: String? = null
+    val address: String? = null
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
         parcel.readDouble(),
@@ -21,7 +21,7 @@ data class Location(
             writeDouble(latitude)
             writeDouble(longitude)
             writeDouble(altitude)
-            writeString(name)
+            writeString(address)
         }
     }
 
@@ -31,7 +31,7 @@ data class Location(
         var result = latitude.hashCode()
         result = 31 * result + longitude.hashCode()
         result = 31 * result + altitude.hashCode()
-        result = 31 * result + name.hashCode()
+        result = 31 * result + address.hashCode()
         return result
     }
 
@@ -44,7 +44,7 @@ data class Location(
         if (latitude != other.latitude) return false
         if (longitude != other.longitude) return false
         if (altitude != other.altitude) return false
-        if (name != other.name) return false
+        if (address != other.address) return false
 
         return true
     }
