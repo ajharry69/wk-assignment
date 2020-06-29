@@ -13,6 +13,7 @@
     <string name="error_field_required">Required</string>
     <string name="person_added_successfully">%1$s added successfully</string>
     <string name="capture_location">Capture Location</string>
-    <string name="street_view">Street view</string>
-    <string name="satellite_view">Satellite view</string>
+    <string name="normal_map_view">Normal view</string>
+    <string name="satellite_map_view">Satellite view</string>
+    <string name="default_location">Unknown</string>
 </resources>

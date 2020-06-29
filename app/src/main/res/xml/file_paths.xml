@@ -2,5 +2,5 @@
 <paths>
     <external-files-path
         name="photos"
-        path="Android/data/com.xently.persona/files/Pictures" />
+        path="Pictures/" />
 </paths>

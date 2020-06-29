@@ -61,7 +61,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_location"
             android:gravity="center_vertical|end"
-            android:text="@{person.location.name}"
+            android:text="@{person.location.name ?? @string/default_location}"
             android:textAlignment="gravity"
             android:textAppearance="?attr/textAppearanceBody2"
             app:layout_constraintBottom_toBottomOf="@id/photo"

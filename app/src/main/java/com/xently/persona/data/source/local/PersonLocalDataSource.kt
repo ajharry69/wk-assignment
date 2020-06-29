@@ -19,7 +19,7 @@ class PersonLocalDataSource internal constructor(private val dao: PersonDao) : I
     }
 
     override suspend fun addPeople(people: List<Person>): TaskResult<List<Person>> {
-        dao.getPeople()
+        dao.addPeople(people)
         return getPeople()
     }
 

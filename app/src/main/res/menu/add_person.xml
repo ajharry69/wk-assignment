@@ -4,7 +4,7 @@
 
     <item
         android:id="@+id/menu_item_map_view"
-        android:icon="@drawable/ic_streetview"
-        android:title="@string/street_view"
+        android:icon="@drawable/ic_street_view"
+        android:title="@string/normal_map_view"
         app:showAsAction="ifRoom|withText" />
 </menu>

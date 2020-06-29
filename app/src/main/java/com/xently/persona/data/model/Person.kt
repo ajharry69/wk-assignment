@@ -15,7 +15,7 @@ data class Person(
     val name: String,
     val gender: Gender,
     val photoUrl: String? = null,
-    @Embedded(prefix = "location_") val location: Location = Location()
+    @Embedded(prefix = "location_") val location: Location? = Location()
 ) : Parcelable {
     enum class Gender(@StringRes val nameRes: Int) {
         FEMALE(R.string.female),

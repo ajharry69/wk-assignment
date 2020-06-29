@@ -41,6 +41,7 @@ class PeopleListFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
+        showViews(binding.noRecords)
         viewModel.run {
             getPeople()
             getObservablePeople().observe(viewLifecycleOwner, Observer {
