@@ -5,8 +5,8 @@ import androidx.lifecycle.*
 import com.xently.persona.data.TaskResult
 import com.xently.persona.data.model.Person
 import com.xently.persona.data.repository.person.IPersonRepository
-import com.xently.persona.data.source.SourceOrDestination
-import com.xently.persona.data.source.SourceOrDestination.LOCAL
+import com.xently.persona.data.Source
+import com.xently.persona.data.Source.LOCAL
 import kotlinx.coroutines.launch
 
 class PeopleListViewModel @ViewModelInject constructor(private val repository: IPersonRepository) :
@@ -22,7 +22,7 @@ class PeopleListViewModel @ViewModelInject constructor(private val repository: I
         }
     }
 
-    fun getObservablePeople(source: SourceOrDestination = LOCAL) = liveData {
+    fun getObservablePeople(source: Source = LOCAL) = liveData {
         emitSource(repository.getObservablePeople(source))
     }
 }

@@ -2,8 +2,9 @@ package com.xently.persona.data.repository.person
 
 import com.xently.persona.data.data
 import com.xently.persona.data.model.Person
+import com.xently.persona.data.Destination
 import com.xently.persona.data.source.IPersonDataSource
-import com.xently.persona.data.source.SourceOrDestination
+import com.xently.persona.data.Source
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -17,9 +18,9 @@ class PersonRepository internal constructor(
     override suspend fun addPerson(
         person: Person,
         photo: File?,
-        destination: SourceOrDestination?
+        destination: Destination?
     ) = withContext(ioDispatcher) {
-        if (destination == SourceOrDestination.LOCAL) {
+        if (destination == Destination.LOCAL) {
             local.addPerson(person, photo, destination)
         } else {
             remote.addPerson(person, photo, destination).run {
@@ -43,8 +44,8 @@ class PersonRepository internal constructor(
         }
     }
 
-    override suspend fun getObservablePeople(source: SourceOrDestination) = when (source) {
-        SourceOrDestination.REMOTE -> remote.getObservablePeople(source)
-        SourceOrDestination.LOCAL -> local.getObservablePeople(source)
+    override suspend fun getObservablePeople(source: Source) = when (source) {
+        Source.REMOTE -> remote.getObservablePeople(source)
+        Source.LOCAL -> local.getObservablePeople(source)
     }
 }

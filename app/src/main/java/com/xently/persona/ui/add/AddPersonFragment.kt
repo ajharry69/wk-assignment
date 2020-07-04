@@ -30,11 +30,11 @@ import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.material.snackbar.Snackbar
 import com.xently.persona.BuildConfig
 import com.xently.persona.R
+import com.xently.persona.data.Destination
 import com.xently.persona.data.TaskResult
 import com.xently.persona.data.errorMessage
 import com.xently.persona.data.model.Location
 import com.xently.persona.data.model.Person
-import com.xently.persona.data.source.SourceOrDestination
 import com.xently.persona.databinding.AddPersonFragmentBinding
 import com.xently.persona.utils.Log
 import com.xently.persona.utils.setImageFromPath
@@ -200,6 +200,8 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDrag
             addMarker(MarkerOptions().position(nairobi).title(address).draggable(true))
             moveCamera(CameraUpdateFactory.newLatLngZoom(nairobi, 18f))
             setOnMarkerDragListener(this@AddPersonFragment)
+            uiSettings.isZoomControlsEnabled = true
+            uiSettings.isZoomGesturesEnabled = true
         }
     }
 
@@ -230,7 +232,7 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDrag
                 ) { onCameraPermissionRationaleNeeded() }
             }
             saveLocal.setClickListener {
-                addPerson(SourceOrDestination.LOCAL)
+                addPerson(Destination.LOCAL)
             }
             list.setOnClickListener(
                 Navigation.createNavigateOnClickListener(AddPersonFragmentDirections.peopleList())
@@ -247,7 +249,7 @@ class AddPersonFragment : Fragment(), OnMapReadyCallback, GoogleMap.OnMarkerDrag
         }
     }
 
-    private fun addPerson(destination: SourceOrDestination? = null) {
+    private fun addPerson(destination: Destination? = null) {
         val person = getPersonFromInputs() ?: return
         viewModel.addPerson(person, photoFile, destination)
     }

@@ -4,8 +4,9 @@ import androidx.lifecycle.MutableLiveData
 import com.xently.persona.data.TaskResult.Success
 import com.xently.persona.data.listData
 import com.xently.persona.data.model.Person
+import com.xently.persona.data.Destination
 import com.xently.persona.data.source.IPersonDataSource
-import com.xently.persona.data.source.SourceOrDestination
+import com.xently.persona.data.Source
 import com.xently.persona.data.source.remote.services.PersonService
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
@@ -20,7 +21,7 @@ class PersonRemoteDataSource internal constructor(
     override suspend fun addPerson(
         person: Person,
         photo: File?,
-        destination: SourceOrDestination?
+        destination: Destination?
     ) = sendRequest(suspend {
         if (photo == null) {
             service.addPerson(person)
@@ -36,6 +37,6 @@ class PersonRemoteDataSource internal constructor(
 
     override suspend fun getPeople() = sendRequest(suspend { service.getPeople() })
 
-    override suspend fun getObservablePeople(source: SourceOrDestination) =
+    override suspend fun getObservablePeople(source: Source) =
         MutableLiveData(getPeople().listData)
 }
