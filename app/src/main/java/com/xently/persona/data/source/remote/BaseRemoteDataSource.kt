@@ -11,7 +11,7 @@ import kotlinx.coroutines.withContext
 import retrofit2.Response
 
 abstract class BaseRemoteDataSource internal constructor(private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO) {
-    @Suppress("UNCHECKED_CAST")
+    @Suppress("UNCHECKED_CAST", "BlockingMethodInNonBlockingContext")
     protected suspend fun <T> sendRequest(request: suspend () -> Response<T>): TaskResult<T> {
         return try {
             val response = request.invoke() // Initiate actual network request call
@@ -29,8 +29,6 @@ abstract class BaseRemoteDataSource internal constructor(private val ioDispatche
                         errorBody?.string(),
                         ServerError::class.java
                     )
-
-                    Log.show(this@BaseRemoteDataSource::class.java.simpleName, error) // TODO
                     TaskResult.Error(Exception(error.message))
                 }
             }
